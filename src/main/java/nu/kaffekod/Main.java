@@ -1,17 +1,45 @@
 package nu.kaffekod;
 
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
+import nu.kaffekod.dao.impl.PersonDaoImpl;
+import nu.kaffekod.db.MySQLConnection;
+
+import java.sql.*;
+
+
 public class Main {
     public static void main(String[] args) {
-        //TIP Press <shortcut actionId="ShowIntentionActions"/> with your caret at the highlighted text
-        // to see how IntelliJ IDEA suggests fixing it.
-        System.out.printf("Hello and welcome!");
 
-        for (int i = 1; i <= 5; i++) {
-            //TIP Press <shortcut actionId="Debug"/> to start debugging your code. We have set one <icon src="AllIcons.Debugger.Db_set_breakpoint"/> breakpoint
-            // for you, but you can always add more by pressing <shortcut actionId="ToggleLineBreakpoint"/>.
-            System.out.println("i = " + i);
+        Connection mySqlConnection = null;
+        try {
+            // Class.forName("com.mysql.jdbc.Driver");
+            mySqlConnection = MySQLConnection.getConnection();
+            mySqlConnection.setAutoCommit(false); // start transaction
+
+            // MySQL
+            try {
+                PersonDaoImpl personDao = new PersonDaoImpl(mySqlConnection);
+
+                Person savedPerson1 = personDao.create(new Person("Pelle", "Påhittad")); // DONE
+                System.out.println("savedPerson1 = " + savedPerson1);
+
+                System.out.println("Operation is Done!");
+
+
+            } catch (RuntimeException e) {
+                e.printStackTrace();
+            }
+            // an error happened
+            mySqlConnection.commit(); // save both records permanently
+
+        } catch (SQLException e) {
+            try {
+                mySqlConnection.rollback(); // Rollback transaction (Undo both insert queries)
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            }
+            e.printStackTrace();
         }
+
+
     }
 }
