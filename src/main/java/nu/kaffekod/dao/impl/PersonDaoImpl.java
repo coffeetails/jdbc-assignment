@@ -3,7 +3,6 @@ package nu.kaffekod.dao.impl;
 import java.sql.*;
 import nu.kaffekod.model.Person;
 import nu.kaffekod.dao.IPersonDao;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -76,6 +75,25 @@ public class PersonDaoImpl implements IPersonDao {
         }
 
         return persons;
+    }
+
+    @Override
+    public Person findById(int id) {
+        Person foundPerson = null;
+        String sql = "SELECT * FROM " + TABLE_NAME + " WHERE " + PERSON_ID + " = " + id;
+        try ( PreparedStatement preparedStatement = connection.prepareStatement(USE_DATABASE, Statement.RETURN_GENERATED_KEYS) ) {
+            ResultSet resultSet = preparedStatement.executeQuery(sql);
+
+            while (resultSet.next()) {
+                foundPerson = new Person(resultSet.getInt(PERSON_ID), resultSet.getString(FIRST_NAME), resultSet.getString(LAST_NAME));
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Error fetching all persons");
+            e.printStackTrace();
+        }
+
+        return foundPerson;
     }
 
     @Override
