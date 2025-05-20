@@ -5,7 +5,10 @@ public class Person {
     private String firstName;
     private String lastName;
 
-
+    public Person(int id, String firstName, String lastName) {
+        this(firstName, lastName);
+        setId(id);
+    }
     public Person(String firstName, String lastName) {
         setFirstName(firstName);
         setLastName(lastName);
