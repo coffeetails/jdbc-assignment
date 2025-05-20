@@ -1,4 +1,4 @@
-package nu.kaffekod;
+package nu.kaffekod.model;
 
 public class Person {
     private int id;

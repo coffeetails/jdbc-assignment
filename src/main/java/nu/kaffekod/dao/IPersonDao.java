@@ -1,6 +1,6 @@
 package nu.kaffekod.dao;
 
-import nu.kaffekod.Person;
+import nu.kaffekod.model.Person;
 
 import java.util.List;
 
