@@ -1,7 +1,7 @@
 package nu.kaffekod.dao.impl;
 
-import nu.kaffekod.Person;
-import nu.kaffekod.Todo;
+import nu.kaffekod.model.Person;
+import nu.kaffekod.model.Todo;
 import nu.kaffekod.dao.ITodoItemsDao;
 
 import java.util.List;
