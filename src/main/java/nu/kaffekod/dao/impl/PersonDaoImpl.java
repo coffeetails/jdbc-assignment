@@ -80,16 +80,17 @@ public class PersonDaoImpl implements IPersonDao {
     @Override
     public Person findById(int id) {
         Person foundPerson = null;
-        String sql = "SELECT * FROM " + TABLE_NAME + " WHERE " + PERSON_ID + " = " + id;
-        try ( PreparedStatement preparedStatement = connection.prepareStatement(USE_DATABASE, Statement.RETURN_GENERATED_KEYS) ) {
-            ResultSet resultSet = preparedStatement.executeQuery(sql);
+        String sql = "SELECT * FROM " + TABLE_NAME + " WHERE " + PERSON_ID + " = ?";
+        try ( PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS) ) {
+            preparedStatement.setInt(1, id);
+            ResultSet resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
                 foundPerson = new Person(resultSet.getInt(PERSON_ID), resultSet.getString(FIRST_NAME), resultSet.getString(LAST_NAME));
             }
 
         } catch (SQLException e) {
-            System.out.println("Error fetching all persons");
+            System.out.println("Error fetching person");
             e.printStackTrace();
         }
 
@@ -98,11 +99,13 @@ public class PersonDaoImpl implements IPersonDao {
 
     @Override
     public List<Person> findByName(String name) {
-        name = name.replaceAll("\\s+","");
+        name = "%" + name + "%";
         List<Person> persons = new ArrayList<>();
-        String sql = "SELECT * FROM " + TABLE_NAME + " WHERE " + FIRST_NAME + " LIKE \"%" + name + "%\" OR " + LAST_NAME + " LIKE \"%" + name + "%\"";
-        try ( PreparedStatement preparedStatement = connection.prepareStatement(USE_DATABASE, Statement.RETURN_GENERATED_KEYS) ) {
-            ResultSet resultSet = preparedStatement.executeQuery(sql);
+        String sql = "SELECT * FROM " + TABLE_NAME + " WHERE " + FIRST_NAME + " LIKE ? OR " + LAST_NAME + " LIKE ?";
+        try ( PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS) ) {
+            preparedStatement.setString(1, name);
+            preparedStatement.setString(2, name);
+            ResultSet resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
                 persons.add(new Person(resultSet.getInt(PERSON_ID), resultSet.getString(FIRST_NAME), resultSet.getString(LAST_NAME) ));

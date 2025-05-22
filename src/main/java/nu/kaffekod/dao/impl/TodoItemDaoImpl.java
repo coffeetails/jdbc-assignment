@@ -90,9 +90,10 @@ public class TodoItemDaoImpl implements ITodoItemsDao {
     @Override
     public TodoItem findById(int id) {
         TodoItem foundTodoItem = null;
-        String sql = "SELECT * FROM " + TABLE_NAME + " WHERE " + TODO_ID + " = " + id;
-        try ( PreparedStatement preparedStatement = connection.prepareStatement(USE_DATABASE, Statement.RETURN_GENERATED_KEYS) ) {
-            ResultSet resultSet = preparedStatement.executeQuery(sql);
+        String sql = "SELECT * FROM " + TABLE_NAME + " WHERE " + TODO_ID + " = ?";
+        try ( PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS) ) {
+            preparedStatement.setInt(1, id);
+            ResultSet resultSet = preparedStatement.executeQuery();
 
             PersonDaoImpl personDao = new PersonDaoImpl(connection);
             while (resultSet.next()) {
@@ -103,7 +104,7 @@ public class TodoItemDaoImpl implements ITodoItemsDao {
                         resultSet.getDate(DEADLINE) == null ? null : resultSet.getDate(DEADLINE).toLocalDate(),
                         resultSet.getBoolean(DONE),
                         personDao.findById(resultSet.getInt(ASSIGNEE_ID))
-                        );
+                );
             }
 
         } catch (SQLException e) {
@@ -117,9 +118,10 @@ public class TodoItemDaoImpl implements ITodoItemsDao {
     @Override
     public List<TodoItem> findByDoneStatus(boolean done) {
         List<TodoItem> todoItems = new ArrayList<>();
-        String sql = "SELECT * FROM " + TABLE_NAME + " WHERE " + DONE + " = " + done;
-        try ( PreparedStatement preparedStatement = connection.prepareStatement(USE_DATABASE, Statement.RETURN_GENERATED_KEYS) ) {
-            ResultSet resultSet = preparedStatement.executeQuery(sql);
+        String sql = "SELECT * FROM " + TABLE_NAME + " WHERE " + DONE + " = ?";
+        try ( PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS) ) {
+            preparedStatement.setBoolean(1, done);
+            ResultSet resultSet = preparedStatement.executeQuery();
 
             PersonDaoImpl personDao = new PersonDaoImpl(connection);
             while (resultSet.next()) {
@@ -148,9 +150,10 @@ public class TodoItemDaoImpl implements ITodoItemsDao {
     @Override
     public List<TodoItem> findByAssignee(int personId) {
         List<TodoItem> todoItems = new ArrayList<>();
-        String sql = "SELECT * FROM " + TABLE_NAME + " WHERE " + ASSIGNEE_ID + " = " + personId;
-        try ( PreparedStatement preparedStatement = connection.prepareStatement(USE_DATABASE, Statement.RETURN_GENERATED_KEYS) ) {
-            ResultSet resultSet = preparedStatement.executeQuery(sql);
+        String sql = "SELECT * FROM " + TABLE_NAME + " WHERE " + ASSIGNEE_ID + " = ?";
+        try ( PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS) ) {
+            preparedStatement.setInt(1, personId);
+            ResultSet resultSet = preparedStatement.executeQuery();
 
             PersonDaoImpl personDao = new PersonDaoImpl(connection);
             while (resultSet.next()) {
@@ -175,9 +178,10 @@ public class TodoItemDaoImpl implements ITodoItemsDao {
     @Override
     public List<TodoItem> findByAssignee(Person person) {
         List<TodoItem> todoItems = new ArrayList<>();
-        String sql = "SELECT * FROM " + TABLE_NAME + " WHERE " + ASSIGNEE_ID + " = " + person.getId();
-        try ( PreparedStatement preparedStatement = connection.prepareStatement(USE_DATABASE, Statement.RETURN_GENERATED_KEYS) ) {
-            ResultSet resultSet = preparedStatement.executeQuery(sql);
+        String sql = "SELECT * FROM " + TABLE_NAME + " WHERE " + ASSIGNEE_ID + " = ?";
+        try ( PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS) ) {
+            preparedStatement.setInt(1, person.getId());
+            ResultSet resultSet = preparedStatement.executeQuery();
 
             PersonDaoImpl personDao = new PersonDaoImpl(connection);
             while (resultSet.next()) {
@@ -203,8 +207,8 @@ public class TodoItemDaoImpl implements ITodoItemsDao {
     public List<TodoItem> findByUnassignedTodoItems() {
         List<TodoItem> todoItems = new ArrayList<>();
         String sql = "SELECT * FROM " + TABLE_NAME + " WHERE " + ASSIGNEE_ID + " IS null";
-        try ( PreparedStatement preparedStatement = connection.prepareStatement(USE_DATABASE, Statement.RETURN_GENERATED_KEYS) ) {
-            ResultSet resultSet = preparedStatement.executeQuery(sql);
+        try ( PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS) ) {
+            ResultSet resultSet = preparedStatement.executeQuery();
 
             PersonDaoImpl personDao = new PersonDaoImpl(connection);
             while (resultSet.next()) {
