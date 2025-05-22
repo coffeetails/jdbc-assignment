@@ -2,7 +2,7 @@ package nu.kaffekod.model;
 
 import java.time.LocalDate;
 
-public class Todo {
+public class TodoItem {
     private int id;
     private String title;
     private String description;
@@ -10,17 +10,22 @@ public class Todo {
     private boolean done;
     private Person assignee;
 
+    public TodoItem(int id, String title, String description, LocalDate deadline, boolean done, Person assignee) {
+        this(title, description, deadline, assignee);
+        setId(id);
+        setDone(done);
+    }
 
-    public Todo(String title, String description, LocalDate deadline, Person assignee) {
+    public TodoItem(String title, String description, LocalDate deadline, Person assignee) {
         this(title, assignee);
         setDescription(description);
         setDeadline(deadline);
     }
-    public Todo(String title, Person assignee) {
+    public TodoItem(String title, Person assignee) {
         this(title);
         setAssignee(assignee);
     }
-    public Todo(String title) {
+    public TodoItem(String title) {
         setTitle(title);
     }
 

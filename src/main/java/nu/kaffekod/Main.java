@@ -1,10 +1,13 @@
 package nu.kaffekod;
 
 import nu.kaffekod.dao.impl.PersonDaoImpl;
+import nu.kaffekod.dao.impl.TodoItemDaoImpl;
 import nu.kaffekod.db.MySQLConnection;
 import nu.kaffekod.model.Person;
+import nu.kaffekod.model.TodoItem;
 
 import java.sql.*;
+import java.time.LocalDate;
 
 /* Test run with:
 * java -cp .:/usr/share/java/mysql-connector-java-9.3.0.jar Main.java
@@ -28,8 +31,14 @@ public class Main {
                 /* */
 
                 /*
-                System.out.println("Operation is Done! All persons so far: ");
+                System.out.println("All persons so far: ");
                 System.out.println(personDao.findAll());
+                System.out.println("==========");
+                /* */
+
+                /* 
+                System.out.println("Find by id 17: ");
+                System.out.println(personDao.findById(17));
                 System.out.println("==========");
                 /* */
 
@@ -51,6 +60,77 @@ public class Main {
                 System.out.println("==========");
                 /* */
 
+                TodoItemDaoImpl todoItemDao = new TodoItemDaoImpl(mySqlConnection);
+                /*
+                TodoItem saveTodoOne = todoItemDao.create(new TodoItem("Wash clothes"));
+                TodoItem saveTodoTwo = todoItemDao.create(new TodoItem("Clean floors", "Don't mop the walls", LocalDate.now().minusDays(100), personDao.findById(17)));
+                TodoItem saveTodoThree = todoItemDao.create(new TodoItem("Scrub the walls", "Don't drip on the floors", LocalDate.now().plusDays(100), personDao.findById(17)));
+                System.out.println("==========");
+                /* */
+
+                /*
+                System.out.println("All todos so far: ");
+                for(TodoItem todoItem : todoItemDao.findAll()) {
+                    System.out.println(todoItem);
+                }
+                System.out.println("==========");
+                /* */
+
+                /*
+                System.out.println("Find todoitem by id 8: ");
+                System.out.println(todoItemDao.findById(8));
+                System.out.println("==========");
+                /* */
+
+                /*
+                System.out.println("Find toditems by done status: ");
+                for(TodoItem todoItem : todoItemDao.findByDoneStatus(true)) {
+                    System.out.println(todoItem);
+                }
+                System.out.println("==========");
+                /* */
+
+                /*
+                System.out.println("Find todoitems by assignee id 17: ");
+                for(TodoItem todoItem : todoItemDao.findByAssignee(17)) {
+                    System.out.println(todoItem);
+                }
+                System.out.println("==========");
+                /* */
+
+                /*
+                System.out.println("Find todoitems by assignee Henry: ");
+                for(TodoItem todoItem : todoItemDao.findByAssignee(new Person(17, "Henry", "Stigsson"))) {
+                    System.out.println(todoItem);
+                }
+                System.out.println("==========");
+                /* */
+
+                /*
+                System.out.println("Find unassigned todoitems: ");
+                for(TodoItem todoItem : todoItemDao.findByUnassignedTodoItems()) {
+                    System.out.println(todoItem);
+                }
+                System.out.println("==========");
+                /* */
+
+                /*
+                System.out.println("Update todoitem: ");
+                System.out.println(todoItemDao.update(new TodoItem(
+                        7,
+                        "Clean floors",
+                        "Don't mop the walls",
+                        LocalDate.of(2025,2,10),
+                        true,
+                        null)));
+                System.out.println("==========");
+                /* */
+
+                /*
+                System.out.println("Delete todoitem: ");
+                System.out.println(todoItemDao.deleteById(4));
+                System.out.println("==========");
+                /* */
 
 
             } catch (RuntimeException e) {
